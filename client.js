@@ -17,17 +17,17 @@ var socket = net.connect(
 var fstream =  fs.createReadStream(FILE)
 
 fstream.on('end', function () {
+  console.log('transfer complete')
   socket.end()
 })
 
+
+socket.on('end', function () {
+  console.log('client disconnecting')
+})
 
 function connectcb() {
   console.log('client connected - transferring file')
   fstream.pipe(socket)
 
 }
-
-
-fstream.on('end', function() {
-  console.log('client disconnected')
-})
