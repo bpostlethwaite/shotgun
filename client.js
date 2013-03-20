@@ -6,22 +6,28 @@ var EC2 = "ec2-174-129-179-178.compute-1.amazonaws.com"
   , PORT = 5001
   , FILE = 'thing.c'
 
-var fstream =  fs.createReadStream(FILE)
 
-var client = net.connect(
+var socket = net.connect(
   {
     port: PORT
   , host: EC2
   }
-, fileStream )
+, connectcb )
+
+var fstream =  fs.createReadStream(FILE)
+
+fstream.on('end', function () {
+  socket.end()
+})
 
 
-function fileStream() {
-  console.log('client connected')
+function connectcb() {
+  console.log('client connected - transferring file')
+  fstream.pipe(socket)
 
 }
 
 
-client.on('end', function() {
+fstream.on('end', function() {
   console.log('client disconnected')
 })
