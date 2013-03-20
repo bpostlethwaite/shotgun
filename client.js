@@ -1,13 +1,27 @@
 var net = require('net')
-var client = net.connect({port: 5001},
-    function() { //'connect' listener
+var fs = require('fs')
+
+
+var EC2 = "ec2-174-129-179-178.compute-1.amazonaws.com"
+  , PORT = 5001
+  , FILE = 'thing.c'
+
+var fstream =  fs.createReadStream(FILE)
+
+var client = net.connect(
+  {
+    port: PORT
+  , host: EC2
+  }
+, fileStream )
+
+
+function fileStream() {
   console.log('client connected')
-  client.write('world!\r\n')
-})
-client.on('data', function(data) {
-  console.log(data.toString())
-  client.end()
-});
+
+}
+
+
 client.on('end', function() {
   console.log('client disconnected')
 })
